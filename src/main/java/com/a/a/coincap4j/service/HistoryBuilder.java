@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.a.a.coincap4j.domain.history.History;
 import com.a.a.coincap4j.domain.history.InternalHistoryRepresentation;
+import com.a.a.coincap4j.util.Either;
 import com.a.a.coincap4j.util.Util;
 
 import retrofit2.Call;
@@ -25,35 +26,35 @@ public class HistoryBuilder {
 			.map(History::fromInternal)
 			.collect(Collectors.toList());
 	
-	private Optional<List<History>> getHistory(Call<List<InternalHistoryRepresentation>> history) {
-		return Util.wrapInOptional(() -> historyTransformer.apply(history.execute().body()));
+	private Either<List<History>, Exception> getHistory(Call<List<InternalHistoryRepresentation>> history) {
+		return Util.wrapInEither(() -> historyTransformer.apply(history.execute().body()));
 	}
 	
-	public Optional<List<History>> all() {
+	public Either<List<History>, Exception> all() {
 		return getHistory(hs.getAllHistory(symbol));
 	}
 	
-	public Optional<List<History>> day() {
+	public Either<List<History>, Exception> day() {
 		return getHistory(hs.get1DayHistory(symbol));
 	}
 	
-	public Optional<List<History>> week() {
+	public Either<List<History>, Exception> week() {
 		return getHistory(hs.get7DayHistory(symbol));
 	} 
 	
-	public Optional<List<History>> month() {
+	public Either<List<History>, Exception> month() {
 		return getHistory(hs.get30DayHistory(symbol));
 	}
 	
-	public Optional<List<History>> quaterly() {
+	public Either<List<History>, Exception> quaterly() {
 		return getHistory(hs.get90DayHistory(symbol));
 	}
 	
-	public Optional<List<History>> halfYear() {
+	public Either<List<History>, Exception> halfYear() {
 		return getHistory(hs.get180DayHistory(symbol));
 	}
 	
-	public Optional<List<History>> year() {
+	public Either<List<History>, Exception> year() {
 		return getHistory(hs.get365DayHistory(symbol));
 	}
 

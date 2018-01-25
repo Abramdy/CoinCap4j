@@ -3,7 +3,6 @@ package com.a.a.coincap4j.util;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 
@@ -38,15 +37,13 @@ public class Util {
 	public static LocalDate localDateFromStr(String unixTime) {
 		return Instant.ofEpochMilli(Long.parseLong(unixTime)).atZone(ZoneId.systemDefault()).toLocalDate();
 	}
-
-	public static <T> Optional<T> wrapInOptional(ThrowingSupplier<T> supplier) {
+	
+	public static <T> Either<T, Exception> wrapInEither(ThrowingSupplier<T> supplier) {
 		try {
 			T data = supplier.get();
-			return Optional.of(data);
+			return Either.left(data);
 		} catch (Exception e) {
-			// for now print it, later add logging
-			System.out.println(e);
-			return Optional.empty();
+			return Either.right(e);
 		}
 	}
 }

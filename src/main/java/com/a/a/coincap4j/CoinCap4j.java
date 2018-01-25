@@ -16,6 +16,7 @@ import com.a.a.coincap4j.service.CoinService;
 import com.a.a.coincap4j.service.GlobalService;
 import com.a.a.coincap4j.service.HistoryBuilder;
 import com.a.a.coincap4j.service.HistoryService;
+import com.a.a.coincap4j.util.Either;
 import com.a.a.coincap4j.util.Util;
 
 import io.socket.client.IO;
@@ -47,33 +48,33 @@ public class CoinCap4j {
 		return instance;
 	}
 	
-	public Optional<GlobalData> getGlobalData() {
+	public Either<GlobalData, Exception> getGlobalData() {
 		Call<GlobalData> listRepos = gs.getGlobalData();
-		return Util.wrapInOptional(() -> listRepos.execute().body());
+		return Util.wrapInEither(() -> listRepos.execute().body());
 	}
 	
-	public Optional<List<String>> getCoinsListShort() {
+	public Either<List<String>, Exception> getCoinsListShort() {
 		Call<List<String>> coinsListShort = cs.getCoinsListShort();
-		return Util.wrapInOptional(() -> coinsListShort.execute().body());
+		return Util.wrapInEither(() -> coinsListShort.execute().body());
 	}
 	
-	public Optional<List<CoinMap>> getCoinsMap() {
+	public Either<List<CoinMap>, Exception> getCoinsMap() {
 		Call<List<CoinMap>> coinsMap = cs.getCoinsMap();
-		return Util.wrapInOptional(() -> coinsMap.execute().body());
+		return Util.wrapInEither(() -> coinsMap.execute().body());
 	}
 	
-	public Optional<List<FrontCoinData>> getFrontCoinData() {
+	public Either<List<FrontCoinData>, Exception> getFrontCoinData() {
 		Call<List<FrontCoinData>> frontCoinData = cs.getFrontCoinData();
-		return Util.wrapInOptional(() -> frontCoinData.execute().body());
+		return Util.wrapInEither(() -> frontCoinData.execute().body());
 	}
 	
-	public Optional<Coin> getCoin(String symbol) {
+	public Either<Coin, Exception> getCoin(String symbol) {
 		Call<Coin> coin = cs.getCoin(symbol);
-		return Util.wrapInOptional(() -> coin.execute().body());
+		return Util.wrapInEither(() -> coin.execute().body());
 	}
 	
-	public List<Optional<Coin>> getCoins(List<String> coins) {
-		List<Optional<Coin>> list = new ArrayList<>();
+	public List<Either<Coin, Exception>> getCoins(List<String> coins) {
+		List<Either<Coin, Exception>> list = new ArrayList<>();
 		coins.forEach(c -> list.add(getCoin(c)));
 		return list;
 	}
@@ -88,7 +89,6 @@ public class CoinCap4j {
 				dataConsumer.accept((JSONObject)args[0]);
 			});		
 		socket.connect();		
-	}
-	
+	}	
 
 }
