@@ -27,6 +27,11 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
+/**
+ * Main entry point for interacting with the coincap data.
+ * @author Aleksandar
+ *
+ */
 public class CoinCap4j {
 
 	public static final String BASE_URL = "http://coincap.io/";
@@ -39,6 +44,11 @@ public class CoinCap4j {
 	private CoinCap4j() {
 	}
 
+	/**
+	 * 
+	 * @return 
+	 * 		An instance for working with coincap data.
+	 */
 	public static CoinCap4j instance() {
 		CoinCap4j instance = new CoinCap4j();
 		instance.retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
@@ -48,17 +58,34 @@ public class CoinCap4j {
 		instance.hs = instance.retrofit.create(HistoryService.class);
 		return instance;
 	}
-
+	
+	/**
+	 * 
+	 * @return
+	 * 		The current global market data.
+	 */
 	public Either<GlobalData, Exception> getGlobalData() {
 		Call<GlobalData> listRepos = gs.getGlobalData();
 		return Util.wrapInEither(() -> listRepos.execute().body());
 	}
 
+	/**
+	 * 
+	 * @return
+	 * 		List containing the short names of all coins and tokens
+	 * 		tracked by coincap.
+	 */
 	public Either<List<String>, Exception> getCoinsListShort() {
 		Call<List<String>> coinsListShort = cs.getCoinsListShort();
 		return Util.wrapInEither(() -> coinsListShort.execute().body());
 	}
 
+	/**
+	 * 
+	 * @return
+	 * 		List of all coin mappings(name, symbol, aliases)
+	 *      being tracked by coincap.
+	 */
 	public Either<List<CoinMap>, Exception> getCoinsMap() {
 		Call<List<CoinMap>> coinsMap = cs.getCoinsMap();
 		return Util.wrapInEither(() -> coinsMap.execute().body());
